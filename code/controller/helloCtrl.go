@@ -9,6 +9,6 @@ func HelloCtrl(param *model.HelloParam) (data *model.HelloResponse, err *model.E
 		data.Res = "Hello " + param.Name
 		return data, nil
 	} else {
-		return nil, &model.ErrorResponse{Code: 1000, Describe: "name 参数是一个空值"}
+		return nil, &model.ErrNameNull
 	}
 }

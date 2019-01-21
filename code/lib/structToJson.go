@@ -12,5 +12,4 @@ func StructToJson(obj interface{}) []byte {
 		fmt.Println(err)
 		return nil
 	}
-
 }
