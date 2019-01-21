@@ -14,7 +14,7 @@
           "发币"
         ],
         "summary": "打印Hello",
-        "operationId": "HelloParam",
+        "operationId": "HelloParams",
         "parameters": [
           {
             "type": "string",

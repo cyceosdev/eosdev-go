@@ -2,7 +2,7 @@ package controller
 
 import "eosdev-go/code/model"
 
-func HelloCtrl(param *model.HelloParam) (data *model.HelloResponse, err *model.ErrorResponse) {
+func HelloCtrl(param *model.HelloParams) (data *model.HelloResponse, err *model.ErrorResponse) {
 	data = &model.HelloResponse{}
 
 	if param.Name != "" {

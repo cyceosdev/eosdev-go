@@ -8,7 +8,7 @@ import (
 )
 
 func Hello(w http.ResponseWriter, req *http.Request) {
-	// swagger:route GET /hello 发币 HelloParam
+	// swagger:route GET /hello 发币 HelloParams
 	//
 	// 打印Hello
 	//
@@ -21,7 +21,7 @@ func Hello(w http.ResponseWriter, req *http.Request) {
 	var queryVals = req.URL.Query()
 	var name = queryVals.Get("name")
 
-	var params = &model.HelloParam{Name: name}
+	var params = &model.HelloParams{Name: name}
 
 	if data, err := controller.HelloCtrl(params); err == nil {
 		w.WriteHeader(200)
