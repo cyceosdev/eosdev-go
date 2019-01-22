@@ -1,8 +1,8 @@
 package main
 
 import (
-	"com.zhaoyin/etoken-go/models"
-	_ "com.zhaoyin/etoken-go/routers"
+	"com.zhaoyin/eosdev-go/models"
+	_ "com.zhaoyin/eosdev-go/routers"
 	"github.com/astaxie/beego"
 )
 

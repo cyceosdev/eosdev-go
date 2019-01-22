@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"com.zhaoyin/etoken-go/models"
+	"com.zhaoyin/eosdev-go/models"
 	"encoding/json"
 	"github.com/astaxie/beego"
 )
