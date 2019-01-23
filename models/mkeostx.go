@@ -43,9 +43,24 @@ func GetEosBalance() (out []eos.Asset, err error) {
 	return
 }
 
+// account 上必须部署了eosio.token的合约
+func NewCreate(issuer eos.AccountName, maxSupply eos.Asset) *eos.Action {
+	return &eos.Action{
+		Account: account,
+		Name:    eos.ActN("create"),
+		Authorization: []eos.PermissionLevel{
+			{Actor: account, Permission: eos.PN("active")},
+		},
+		ActionData: eos.NewActionData(token.Create{
+			Issuer:        issuer,
+			MaximumSupply: maxSupply,
+		}),
+	}
+}
+
 func CreateToken(maxSupply eos.Asset) (out *eos.PushTransactionFullResp, err error) {
 	var issuer = account
-	var act = token.NewCreate(issuer, maxSupply)
+	var act = NewCreate(issuer, maxSupply)
 	out, err = eosapi.SignPushActions(act)
 	return
 }

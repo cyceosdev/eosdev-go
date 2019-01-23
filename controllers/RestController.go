@@ -82,7 +82,7 @@ func (c *RestController) CreateToken() {
 	}
 
 	if out, err := models.CreateToken(maxSupply); err != nil {
-		remp["result"] = err
+		remp["result"] = err.Error()
 		remp["state"] = 3
 		c.ReturnValue(remp)
 		return
