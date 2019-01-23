@@ -149,7 +149,7 @@ func (c *RestController) IssueToken() {
 
 	if out, err := models.IssueToken(to, quantity, memo); err != nil {
 		remp["result"] = err.Error()
-		remp["state"] = 2
+		remp["state"] = 3
 		c.ReturnValue(remp)
 		return
 	} else {
