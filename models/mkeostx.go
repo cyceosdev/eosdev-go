@@ -5,6 +5,7 @@ import (
 
 	"github.com/astaxie/beego"
 	eos "github.com/eoscanada/eos-go"
+	"github.com/eoscanada/eos-go/token"
 )
 
 var (
@@ -39,5 +40,17 @@ func GetInfo() (infoResp *eos.InfoResp, err error) {
 
 func GetEosBalance() (out []eos.Asset, err error) {
 	out, err = eosapi.GetCurrencyBalance(account, "EOS", "eosio.token")
+	return
+}
+
+func CreateToken(maxSupply eos.Asset) (out *eos.PushTransactionFullResp, err error) {
+	var issuer = account
+	var act = token.NewCreate(issuer, maxSupply)
+	out, err = eosapi.SignPushActions(act)
+	return
+}
+
+func GetAccount(name eos.AccountName) (out *eos.AccountResp, err error) {
+	out, err = eosapi.GetAccount(name)
 	return
 }
