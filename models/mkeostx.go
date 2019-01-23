@@ -90,3 +90,8 @@ func GetAccount(name eos.AccountName) (out *eos.AccountResp, err error) {
 	out, err = eosapi.GetAccount(name)
 	return
 }
+
+func GetCurrencyBalance(account eos.AccountName, symbol string, code eos.AccountName) (out []eos.Asset, err error) {
+	out, err = eosapi.GetCurrencyBalance(account, symbol, code)
+	return
+}

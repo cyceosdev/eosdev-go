@@ -158,6 +158,31 @@ func (c *RestController) IssueToken() {
 
 }
 
+func (c *RestController) GetCurrencyBalance() {
+	// account eos.AccountName, symbol string, code eos.AccountName
+	var remp = make(map[string]interface{})
+	var query = c.Ctx.Input.Context.Request.URL.Query()
+
+	var strAccountName = query.Get("name")
+	var symbol = query.Get("symbol")
+	var strCode = query.Get("code")
+
+	var account = eos.AN(strAccountName)
+	var code = eos.AN(strCode)
+
+	if out, err := models.GetCurrencyBalance(account, symbol, code); err != nil {
+		remp["result"] = err.Error()
+		remp["state"] = 3
+		c.ReturnValue(remp)
+		return
+	} else {
+		remp["result"] = out
+		remp["state"] = 0
+		c.ReturnValue(remp)
+		return
+	}
+}
+
 func (c *RestController) ReturnValue(remp map[string]interface{}) {
 	c.Data["json"] = remp
 	c.ServeJSON()

@@ -1,0 +1,158 @@
+{
+	"info": {
+		"_postman_id": "011196cf-49cc-4548-a900-c1f8348cc31f",
+		"name": "smh",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create_token",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"max_supply\": \"1000000000000.0000 ZZZ\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/create_token",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"create_token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_account",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/get_account?name=cyc543215432",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"get_account"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "cyc543215432"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "issue_token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"to\":\"cyc543215432\",\n\t\"quantity\":\"500.0000 ZZZ\",\n\t\"memo\": \"5\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/issue_token",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"issue_token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_currency_balance",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/get_currency_balance?name=cyc543215432&symbol=ZZZ&code=cyc543215432",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"get_currency_balance"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "cyc543215432"
+						},
+						{
+							"key": "symbol",
+							"value": "ZZZ"
+						},
+						{
+							"key": "code",
+							"value": "cyc543215432"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
