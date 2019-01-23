@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"math/rand"
+	"time"
 
 	"com.zhaoyin/eosdev-go/models"
 	"github.com/astaxie/beego"
@@ -188,9 +189,10 @@ func (c *RestController) GetCurrencyBalance() {
 func NewAccountName() string {
 	const elems = "abcdefghijklmnopqrstuvwxyz12345"
 
+	var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 	var name string
 	for i := 0; i < 12; i++ {
-		name += string(elems[rand.Intn(30)])
+		name += string(elems[r.Intn(30)])
 	}
 
 	return name
