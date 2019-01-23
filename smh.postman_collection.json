@@ -153,6 +153,74 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "create_account",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"smh123451234\",\n\t\"public_key\":\"EOS7x9MC4y5dzcvCf4fu3X77gYSh95iKb1yrBeoUykh6mYzK3hkZb\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/create_account",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"create_account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "root_transfer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"to\":\"smh123451234\",\n\t\"quantity\":\"10.0000 ZZZ\",\n\t\"memo\":\"转账10.0000 ZZZ\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/root_transfer",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"root_transfer"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
