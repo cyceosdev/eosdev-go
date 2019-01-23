@@ -10,6 +10,12 @@ import (
 	"github.com/eoscanada/eos-go/token"
 )
 
+type NewAccountInfo struct {
+	Name   string `json:"name"`
+	PubKey string `json:"public_key"`
+	PriKey string `json:"private_key"`
+}
+
 var (
 	eosurl    string
 	pk        string

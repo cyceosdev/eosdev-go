@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"math/rand"
 
 	"com.zhaoyin/eosdev-go/models"
 	"github.com/astaxie/beego"
@@ -184,43 +185,43 @@ func (c *RestController) GetCurrencyBalance() {
 	}
 }
 
+func NewAccountName() string {
+	const elems = "abcdefghijklmnopqrstuvwxyz12345"
+
+	var name string
+	for i := 0; i < 12; i++ {
+		name += string(elems[rand.Intn(30)])
+	}
+
+	return name
+}
+
 func (c *RestController) CreateAccount() {
 	var remp = make(map[string]interface{})
-	var request map[string]string
-	if c.Ctx.Input.RequestBody == nil {
-		c.ReturnValue(remp)
-		return
-	}
+	var strAccountName = NewAccountName()
+	var accountName = eos.AN(strAccountName)
 
-	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &request); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 1
-		c.ReturnValue(remp)
-		return
-	}
-
-	var strName = request["name"]
-	var strPublicKey = request["public_key"]
-
-	var accountName = eos.AN(strName)
-	var publicKey ecc.PublicKey
-
-	if val, err := ecc.NewPublicKey(strPublicKey); err != nil {
+	var randomPriKey *ecc.PrivateKey
+	if val, err := ecc.NewRandomPrivateKey(); err != nil {
 		remp["result"] = err.Error()
 		remp["state"] = 2
 		c.ReturnValue(remp)
-		return
 	} else {
-		publicKey = val
+		randomPriKey = val
 	}
+	var publicKey = randomPriKey.PublicKey()
 
-	if out, err := models.CreateAccount(accountName, publicKey); err != nil {
+	if _, err := models.CreateAccount(accountName, publicKey); err != nil {
 		remp["result"] = err.Error()
 		remp["state"] = 3
 		c.ReturnValue(remp)
 		return
 	} else {
-		remp["result"] = out
+		remp["result"] = &models.NewAccountInfo{
+			Name:   strAccountName,
+			PubKey: randomPriKey.PublicKey().String(),
+			PriKey: randomPriKey.String(),
+		}
 		remp["state"] = 0
 		c.ReturnValue(remp)
 		return

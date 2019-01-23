@@ -157,7 +157,7 @@
 		{
 			"name": "create_account",
 			"request": {
-				"method": "PUT",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
@@ -168,7 +168,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\":\"smh123451234\",\n\t\"public_key\":\"EOS7x9MC4y5dzcvCf4fu3X77gYSh95iKb1yrBeoUykh6mYzK3hkZb\"\n}"
+					"raw": ""
 				},
 				"url": {
 					"raw": "http://127.0.0.1:8080/api/create_account",
