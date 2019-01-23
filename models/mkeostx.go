@@ -101,7 +101,7 @@ func GetCurrencyBalance(account eos.AccountName, symbol string, code eos.Account
 func CreateAccount(accountName eos.AccountName, publicKey ecc.PublicKey) (out *eos.PushTransactionFullResp, err error) {
 	var actNewAccount = system.NewNewAccount(account, accountName, publicKey)
 
-	var actBuyrambytes = system.NewBuyRAMBytes(account, accountName, uint32(3*1024))
+	var actBuyrambytes = system.NewBuyRAMBytes(account, accountName, uint32(3020))
 
 	var actDelegatebw = system.NewDelegateBW(account, accountName,
 		eos.Asset{Amount: 1, Symbol: eos.Symbol{Precision: 4, Symbol: "EOS"}},
