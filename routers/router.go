@@ -13,4 +13,5 @@ func init() {
 	beego.Router("/api/get_account", &controllers.RestController{}, "get:GetAccount")
 	beego.Router("/api/get_currency_balance", &controllers.RestController{}, "get:GetCurrencyBalance")
 	beego.Router("/api/create_account", &controllers.RestController{}, "put:CreateAccount")
+	beego.Router("/api/root_transfer", &controllers.RestController{}, "post:RootTransfer")
 }

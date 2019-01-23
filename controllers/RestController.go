@@ -227,6 +227,50 @@ func (c *RestController) CreateAccount() {
 	}
 }
 
+func (c *RestController) RootTransfer() {
+	var remp = make(map[string]interface{})
+	var request map[string]string
+	if c.Ctx.Input.RequestBody == nil {
+		c.ReturnValue(remp)
+		return
+	}
+
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &request); err != nil {
+		remp["result"] = err.Error()
+		remp["state"] = 1
+		c.ReturnValue(remp)
+		return
+	}
+
+	var strTo = request["to"]
+	var strQuantity = request["quantity"]
+	var memo = request["memo"]
+
+	var to = eos.AN(strTo)
+
+	var quantity eos.Asset
+	if val, err := eos.NewAsset(strQuantity); err != nil {
+		remp["result"] = err.Error()
+		remp["state"] = 2
+		c.ReturnValue(remp)
+		return
+	} else {
+		quantity = val
+	}
+
+	if out, err := models.RootTransfer(to, quantity, memo); err != nil {
+		remp["result"] = err.Error()
+		remp["state"] = 3
+		c.ReturnValue(remp)
+		return
+	} else {
+		remp["result"] = out
+		remp["state"] = 0
+		c.ReturnValue(remp)
+		return
+	}
+}
+
 func (c *RestController) ReturnValue(remp map[string]interface{}) {
 	c.Data["json"] = remp
 	c.ServeJSON()

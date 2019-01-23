@@ -110,3 +110,26 @@ func CreateAccount(accountName eos.AccountName, publicKey ecc.PublicKey) (out *e
 	out, err = eosapi.SignPushActions(actNewAccount, actBuyrambytes, actDelegatebw)
 	return
 }
+
+func NewTransfer(from, to eos.AccountName, quantity eos.Asset, memo string) *eos.Action {
+	return &eos.Action{
+		Account: account,
+		Name:    eos.ActN("transfer"),
+		Authorization: []eos.PermissionLevel{
+			{Actor: from, Permission: eos.PN("active")},
+		},
+		ActionData: eos.NewActionData(token.Transfer{
+			From:     from,
+			To:       to,
+			Quantity: quantity,
+			Memo:     memo,
+		}),
+	}
+}
+
+func RootTransfer(to eos.AccountName, quantity eos.Asset, memo string) (out *eos.PushTransactionFullResp, err error) {
+	var act = NewTransfer(account, to, quantity, memo)
+
+	out, err = eosapi.SignPushActions(act)
+	return
+}
