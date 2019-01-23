@@ -1,9 +1,10 @@
 package models
 
 import (
-	"github.com/astaxie/beego"
-	"github.com/eoscanada/eos-go"
 	"sync"
+
+	"github.com/astaxie/beego"
+	eos "github.com/eoscanada/eos-go"
 )
 
 var (
