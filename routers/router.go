@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"com.zhaoyin/etoken-go/controllers"
+	"com.zhaoyin/eosdev-go/controllers"
 	"github.com/astaxie/beego"
 )
 
