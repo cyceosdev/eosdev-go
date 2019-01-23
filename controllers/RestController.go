@@ -106,7 +106,7 @@ func (c *RestController) GetAccount() {
 	var strAccountName = query.Get("name")
 	var name = eos.AN(strAccountName)
 	if out, err := models.GetAccount(name); err != nil {
-		remp["result"] = err
+		remp["result"] = err.Error()
 		remp["state"] = 3
 		c.ReturnValue(remp)
 		return
