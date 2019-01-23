@@ -5,6 +5,8 @@ import (
 
 	"github.com/astaxie/beego"
 	eos "github.com/eoscanada/eos-go"
+	"github.com/eoscanada/eos-go/ecc"
+	"github.com/eoscanada/eos-go/system"
 	"github.com/eoscanada/eos-go/token"
 )
 
@@ -93,5 +95,18 @@ func GetAccount(name eos.AccountName) (out *eos.AccountResp, err error) {
 
 func GetCurrencyBalance(account eos.AccountName, symbol string, code eos.AccountName) (out []eos.Asset, err error) {
 	out, err = eosapi.GetCurrencyBalance(account, symbol, code)
+	return
+}
+
+func CreateAccount(accountName eos.AccountName, publicKey ecc.PublicKey) (out *eos.PushTransactionFullResp, err error) {
+	var actNewAccount = system.NewNewAccount(account, accountName, publicKey)
+
+	var actBuyrambytes = system.NewBuyRAMBytes(account, accountName, uint32(3*1024))
+
+	var actDelegatebw = system.NewDelegateBW(account, accountName,
+		eos.Asset{Amount: 1, Symbol: eos.Symbol{Precision: 4, Symbol: "EOS"}},
+		eos.Asset{Amount: 1, Symbol: eos.Symbol{Precision: 4, Symbol: "EOS"}}, false)
+
+	out, err = eosapi.SignPushActions(actNewAccount, actBuyrambytes, actDelegatebw)
 	return
 }

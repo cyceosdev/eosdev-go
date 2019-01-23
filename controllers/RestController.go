@@ -6,6 +6,7 @@ import (
 	"com.zhaoyin/eosdev-go/models"
 	"github.com/astaxie/beego"
 	eos "github.com/eoscanada/eos-go"
+	"github.com/eoscanada/eos-go/ecc"
 )
 
 type RestController struct {
@@ -171,6 +172,49 @@ func (c *RestController) GetCurrencyBalance() {
 	var code = eos.AN(strCode)
 
 	if out, err := models.GetCurrencyBalance(account, symbol, code); err != nil {
+		remp["result"] = err.Error()
+		remp["state"] = 3
+		c.ReturnValue(remp)
+		return
+	} else {
+		remp["result"] = out
+		remp["state"] = 0
+		c.ReturnValue(remp)
+		return
+	}
+}
+
+func (c *RestController) CreateAccount() {
+	var remp = make(map[string]interface{})
+	var request map[string]string
+	if c.Ctx.Input.RequestBody == nil {
+		c.ReturnValue(remp)
+		return
+	}
+
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &request); err != nil {
+		remp["result"] = err.Error()
+		remp["state"] = 1
+		c.ReturnValue(remp)
+		return
+	}
+
+	var strName = request["name"]
+	var strPublicKey = request["public_key"]
+
+	var accountName = eos.AN(strName)
+	var publicKey ecc.PublicKey
+
+	if val, err := ecc.NewPublicKey(strPublicKey); err != nil {
+		remp["result"] = err.Error()
+		remp["state"] = 2
+		c.ReturnValue(remp)
+		return
+	} else {
+		publicKey = val
+	}
+
+	if out, err := models.CreateAccount(accountName, publicKey); err != nil {
 		remp["result"] = err.Error()
 		remp["state"] = 3
 		c.ReturnValue(remp)
