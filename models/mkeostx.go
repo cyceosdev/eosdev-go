@@ -65,6 +65,27 @@ func CreateToken(maxSupply eos.Asset) (out *eos.PushTransactionFullResp, err err
 	return
 }
 
+func NewIssue(to eos.AccountName, quantity eos.Asset, memo string) *eos.Action {
+	return &eos.Action{
+		Account: account,
+		Name:    eos.ActN("issue"),
+		Authorization: []eos.PermissionLevel{
+			{Actor: account, Permission: eos.PN("active")},
+		},
+		ActionData: eos.NewActionData(token.Issue{
+			To:       to,
+			Quantity: quantity,
+			Memo:     memo,
+		}),
+	}
+}
+
+func IssueToken(to eos.AccountName, quantity eos.Asset, memo string) (out *eos.PushTransactionFullResp, err error) {
+	var act = NewIssue(to, quantity, memo)
+	out, err = eosapi.SignPushActions(act)
+	return
+}
+
 func GetAccount(name eos.AccountName) (out *eos.AccountResp, err error) {
 	out, err = eosapi.GetAccount(name)
 	return

@@ -96,11 +96,6 @@ func (c *RestController) CreateToken() {
 
 func (c *RestController) GetAccount() {
 	var remp = make(map[string]interface{})
-	if c.Ctx.Input.RequestBody == nil {
-		c.ReturnValue(remp)
-		return
-	}
-
 	var query = c.Ctx.Input.Context.Request.URL.Query()
 
 	var strAccountName = query.Get("name")
@@ -116,6 +111,51 @@ func (c *RestController) GetAccount() {
 		c.ReturnValue(remp)
 		return
 	}
+}
+
+func (c *RestController) IssueToken() {
+	var remp = make(map[string]interface{})
+
+	var request map[string]string
+	if c.Ctx.Input.RequestBody == nil {
+		c.ReturnValue(remp)
+		return
+	}
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &request); err != nil {
+		remp["result"] = err.Error()
+		remp["state"] = 1
+		c.ReturnValue(remp)
+		return
+	}
+
+	var strTo = request["to"]
+	var strQuantity = request["quantity"]
+	var memo = request["memo"]
+
+	var to = eos.AN(strTo)
+
+	var quantity eos.Asset
+	if val, err := eos.NewAsset(strQuantity); err != nil {
+		remp["result"] = err.Error()
+		remp["state"] = 2
+		c.ReturnValue(remp)
+		return
+	} else {
+		quantity = val
+	}
+
+	if out, err := models.IssueToken(to, quantity, memo); err != nil {
+		remp["result"] = err.Error()
+		remp["state"] = 2
+		c.ReturnValue(remp)
+		return
+	} else {
+		remp["result"] = out
+		remp["state"] = 0
+		c.ReturnValue(remp)
+		return
+	}
+
 }
 
 func (c *RestController) ReturnValue(remp map[string]interface{}) {
