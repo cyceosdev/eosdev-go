@@ -58,17 +58,18 @@ func (c *RestController) TestApi() {
 }
 
 func (c *RestController) CreateToken() {
-	var remp = make(map[string]interface{})
+	var responseData = &models.ResponseData{}
+	defer c.ReturnResponsData(responseData)
+
 	var request map[string]string
 	if c.Ctx.Input.RequestBody == nil {
-		c.ReturnValue(remp)
+		responseData = models.ErrorBodyNil
 		return
 	}
 
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &request); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 1
-		c.ReturnValue(remp)
+		responseData.Error = err.Error()
+		responseData.State = models.ErrorJsonState
 		return
 	}
 
@@ -76,58 +77,55 @@ func (c *RestController) CreateToken() {
 
 	var maxSupply eos.Asset
 	if val, err := eos.NewAsset(strMaxSupply); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 2
-		c.ReturnValue(remp)
+		responseData.State = models.ErrorAssetState
+		responseData.Error = err.Error()
 		return
 	} else {
 		maxSupply = val
 	}
 
 	if out, err := models.CreateToken(maxSupply); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 3
-		c.ReturnValue(remp)
+		responseData.State = models.ErrorEOSAPIState
+		responseData.Error = err.Error()
 		return
 	} else {
-		remp["result"] = out
-		remp["state"] = 0
-		c.ReturnValue(remp)
+		responseData.State = models.SuccessState
+		responseData.Result = out
 		return
 	}
 }
 
 func (c *RestController) GetAccount() {
-	var remp = make(map[string]interface{})
+	var responseData = &models.ResponseData{}
+	defer c.ReturnResponsData(responseData)
+
 	var query = c.Ctx.Input.Context.Request.URL.Query()
 
 	var strAccountName = query.Get("name")
 	var name = eos.AN(strAccountName)
 	if out, err := models.GetAccount(name); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 3
-		c.ReturnValue(remp)
+		responseData.State = models.ErrorEOSAPIState
+		responseData.Error = err.Error()
 		return
 	} else {
-		remp["result"] = out
-		remp["state"] = 0
-		c.ReturnValue(remp)
+		responseData.State = models.SuccessState
+		responseData.Result = out
 		return
 	}
 }
 
 func (c *RestController) IssueToken() {
-	var remp = make(map[string]interface{})
+	var responseData = &models.ResponseData{}
+	defer c.ReturnResponsData(responseData)
 
 	var request map[string]string
 	if c.Ctx.Input.RequestBody == nil {
-		c.ReturnValue(remp)
+		responseData = models.ErrorBodyNil
 		return
 	}
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &request); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 1
-		c.ReturnValue(remp)
+		responseData.State = models.ErrorJsonState
+		responseData.Error = err.Error()
 		return
 	}
 
@@ -139,31 +137,29 @@ func (c *RestController) IssueToken() {
 
 	var quantity eos.Asset
 	if val, err := eos.NewAsset(strQuantity); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 2
-		c.ReturnValue(remp)
+		responseData.State = models.ErrorAssetState
+		responseData.Error = err.Error()
 		return
 	} else {
 		quantity = val
 	}
 
 	if out, err := models.IssueToken(to, quantity, memo); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 3
-		c.ReturnValue(remp)
+		responseData.State = models.ErrorEOSAPIState
+		responseData.Error = err.Error()
 		return
 	} else {
-		remp["result"] = out
-		remp["state"] = 0
-		c.ReturnValue(remp)
+		responseData.State = models.SuccessState
+		responseData.Result = out
 		return
 	}
 
 }
 
 func (c *RestController) GetCurrencyBalance() {
-	// account eos.AccountName, symbol string, code eos.AccountName
-	var remp = make(map[string]interface{})
+	var responseData = &models.ResponseData{}
+	defer c.ReturnResponsData(responseData)
+
 	var query = c.Ctx.Input.Context.Request.URL.Query()
 
 	var strAccountName = query.Get("name")
@@ -174,14 +170,12 @@ func (c *RestController) GetCurrencyBalance() {
 	var code = eos.AN(strCode)
 
 	if out, err := models.GetCurrencyBalance(account, symbol, code); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 3
-		c.ReturnValue(remp)
+		responseData.State = models.ErrorEOSAPIState
+		responseData.Error = err.Error()
 		return
 	} else {
-		remp["result"] = out
-		remp["state"] = 0
-		c.ReturnValue(remp)
+		responseData.State = models.SuccessState
+		responseData.Result = out
 		return
 	}
 }
@@ -200,49 +194,50 @@ func NewAccountName() string {
 }
 
 func (c *RestController) CreateAccount() {
-	var remp = make(map[string]interface{})
+	var responseData = &models.ResponseData{}
+	defer c.ReturnResponsData(responseData)
+
 	var strAccountName = NewAccountName()
 	var accountName = eos.AN(strAccountName)
 
 	var randomPriKey *ecc.PrivateKey
 	if val, err := ecc.NewRandomPrivateKey(); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 2
-		c.ReturnValue(remp)
+		responseData.State = models.ErrorPriKeyState
+		responseData.Error = err.Error()
+		return
 	} else {
 		randomPriKey = val
 	}
 	var publicKey = randomPriKey.PublicKey()
 
 	if _, err := models.CreateAccount(accountName, publicKey); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 3
-		c.ReturnValue(remp)
+		responseData.State = models.ErrorEOSAPIState
+		responseData.Error = err.Error()
 		return
 	} else {
-		remp["result"] = &models.NewAccountInfo{
+		responseData.State = models.SuccessState
+		responseData.Result = &models.NewAccountInfo{
 			Name:   strAccountName,
 			PubKey: randomPriKey.PublicKey().String(),
 			PriKey: randomPriKey.String(),
 		}
-		remp["state"] = 0
-		c.ReturnValue(remp)
 		return
 	}
 }
 
 func (c *RestController) RootTransfer() {
-	var remp = make(map[string]interface{})
+	var responseData = &models.ResponseData{}
+	defer c.ReturnResponsData(responseData)
+
 	var request map[string]string
 	if c.Ctx.Input.RequestBody == nil {
-		c.ReturnValue(remp)
+		responseData = models.ErrorBodyNil
 		return
 	}
 
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &request); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 1
-		c.ReturnValue(remp)
+		responseData.State = models.ErrorJsonState
+		responseData.Error = err.Error()
 		return
 	}
 
@@ -254,28 +249,25 @@ func (c *RestController) RootTransfer() {
 
 	var quantity eos.Asset
 	if val, err := eos.NewAsset(strQuantity); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 2
-		c.ReturnValue(remp)
+		responseData.State = models.ErrorAssetState
+		responseData.Error = err.Error()
 		return
 	} else {
 		quantity = val
 	}
 
 	if out, err := models.RootTransfer(to, quantity, memo); err != nil {
-		remp["result"] = err.Error()
-		remp["state"] = 3
-		c.ReturnValue(remp)
+		responseData.State = models.ErrorEOSAPIState
+		responseData.Error = err.Error()
 		return
 	} else {
-		remp["result"] = out
-		remp["state"] = 0
-		c.ReturnValue(remp)
+		responseData.State = models.SuccessState
+		responseData.Result = out
 		return
 	}
 }
 
-func (c *RestController) ReturnValue(remp map[string]interface{}) {
+func (c *RestController) ReturnResponsData(remp *models.ResponseData) {
 	c.Data["json"] = remp
 	c.ServeJSON()
 }

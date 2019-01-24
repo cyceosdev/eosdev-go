@@ -16,6 +16,23 @@ type NewAccountInfo struct {
 	PriKey string `json:"private_key"`
 }
 
+type ResponseData struct {
+	State  int         `json:"state"`
+	Result interface{} `json:"result,omitempty"`
+	Error  string      `json:"error,omitempty"`
+}
+
+var (
+	SuccessState     = 0
+	ErrorEOSAPIState = 1
+	ErrorJsonState   = 2
+	ErrorAssetState  = 3
+	ErrorBodyState   = 4
+	ErrorPriKeyState = 5
+
+	ErrorBodyNil = &ResponseData{State: ErrorBodyState, Error: "Body is empty"}
+)
+
 var (
 	eosurl    string
 	pk        string
