@@ -191,7 +191,8 @@ func NewAccountName() string {
 
 	var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 	var name string
-	for i := 0; i < 12; i++ {
+	name += string(elems[r.Intn(25)])
+	for i := 1; i < 12; i++ {
 		name += string(elems[r.Intn(30)])
 	}
 
