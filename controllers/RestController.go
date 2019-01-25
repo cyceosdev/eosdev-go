@@ -1,13 +1,10 @@
 package controllers
 
 import (
-	"encoding/json"
-	"math/rand"
-	"time"
-
 	"com.zhaoyin/eosdev-go/models"
+	"encoding/json"
 	"github.com/astaxie/beego"
-	eos "github.com/eoscanada/eos-go"
+	"github.com/eoscanada/eos-go"
 	"github.com/eoscanada/eos-go/ecc"
 )
 
@@ -180,26 +177,24 @@ func (c *RestController) GetCurrencyBalance() {
 	}
 }
 
-func NewAccountName() string {
-	const elems = "abcdefghijklmnopqrstuvwxyz12345"
-
-	var r = rand.New(rand.NewSource(time.Now().UnixNano()))
-	var name string
-	name += string(elems[r.Intn(25)])
-	for i := 1; i < 12; i++ {
-		name += string(elems[r.Intn(30)])
-	}
-
-	return name
-}
+//func NewAccountName() string {
+//	const elems = "abcdefghijklmnopqrstuvwxyz12345"
+//
+//	var r = rand.New(rand.NewSource(time.Now().UnixNano()))
+//	var name string
+//	name += string(elems[r.Intn(25)])
+//	for i := 1; i < 12; i++ {
+//		name += string(elems[r.Intn(30)])
+//	}
+//
+//	return name
+//}
 
 func (c *RestController) CreateAccount() {
 	var responseData = &models.ResponseData{}
 	defer c.ReturnResponsData(responseData)
-
-	var strAccountName = NewAccountName()
+	var strAccountName = models.NewRandomAccount()
 	var accountName = eos.AN(strAccountName)
-
 	var randomPriKey *ecc.PrivateKey
 	if val, err := ecc.NewRandomPrivateKey(); err != nil {
 		responseData.State = models.ErrorPriKeyState
